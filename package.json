@@ -3,7 +3,7 @@
 	"version": "0.1.0",
 	"description": "n8n community node for the Open5e API - D&D 5e SRD content",
 	"license": "MIT",
-	"homepage": "https://github.com/yourusername/n8n-nodes-open5e",
+	"homepage": "https://github.com/garritfra/n8n-nodes-open5e",
 	"keywords": [
 		"n8n-community-node-package",
 		"open5e",
@@ -15,12 +15,12 @@
 		"rpg"
 	],
 	"author": {
-		"name": "Your Name",
-		"email": "your.email@example.com"
+		"name": "Garrit Franke",
+		"email": "garrit@slashdev.space"
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/yourusername/n8n-nodes-open5e.git"
+		"url": "https://github.com/garritfra/n8n-nodes-open5e.git"
 	},
 	"scripts": {
 		"build": "n8n-node build",
