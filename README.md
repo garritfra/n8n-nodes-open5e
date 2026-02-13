@@ -176,7 +176,7 @@ npm run lint:fix
 
 ## License
 
-[MIT](https://github.com/yourusername/n8n-nodes-open5e/blob/main/LICENSE.md)
+[MIT](https://github.com/garritfra/n8n-nodes-open5e/blob/main/LICENSE.md)
 
 ## Contributing
 
@@ -184,5 +184,5 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## Support
 
-- Report issues at: https://github.com/yourusername/n8n-nodes-open5e/issues
+- Report issues at: https://github.com/garritfra/n8n-nodes-open5e/issues
 - Join the n8n community: https://community.n8n.io/
