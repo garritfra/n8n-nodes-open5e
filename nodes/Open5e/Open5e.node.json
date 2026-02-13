@@ -1,0 +1,13 @@
+{
+	"node": "n8n-nodes-open5e",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["Productivity", "Data & Storage"],
+	"resources": {
+		"primaryDocumentation": [
+			{
+				"url": "https://api.open5e.com"
+			}
+		]
+	}
+}

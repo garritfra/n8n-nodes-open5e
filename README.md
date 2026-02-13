@@ -1,247 +1,188 @@
-![Banner image](https://user-images.githubusercontent.com/10284570/173569848-c624317f-42b1-45a6-ab09-f0ea3c247648.png)
+# n8n-nodes-open5e
 
-# n8n-nodes-starter
+This is an n8n community node that lets you access D&D 5th edition SRD content from the [Open5e API](https://api.open5e.com) in your n8n workflows.
 
-This starter repository helps you build custom integrations for [n8n](https://n8n.io). It includes example nodes, credentials, the node linter, and all the tooling you need to get started.
+[n8n](https://n8n.io/) is a [fair-code licensed](https://docs.n8n.io/reference/license/) workflow automation platform.
 
-## Quick Start
+[Installation](#installation)
+[Operations](#operations)
+[Credentials](#credentials)
+[Compatibility](#compatibility)
+[Usage](#usage)
+[Resources](#resources)
+[Limitations](#limitations)
+[License](#license)
 
-> [!TIP]
-> **New to building n8n nodes?** The fastest way to get started is with `npm create @n8n/node`. This command scaffolds a complete node package for you using the [@n8n/node-cli](https://www.npmjs.com/package/@n8n/node-cli).
+## Installation
 
-**To create a new node package from scratch:**
+Follow the [installation guide](https://docs.n8n.io/integrations/community-nodes/installation/) in the n8n community nodes documentation.
 
-```bash
-npm create @n8n/node
-```
-
-**Already using this starter? Start developing with:**
-
-```bash
-npm run dev
-```
-
-This starts n8n with your nodes loaded and hot reload enabled.
-
-## What's Included
-
-This starter repository includes two example nodes to learn from:
-
-- **[Example Node](nodes/Example/)** - A simple starter node that shows the basic structure with a custom `execute` method
-- **[GitHub Issues Node](nodes/GithubIssues/)** - A complete, production-ready example built using the **declarative style**:
-  - **Low-code approach** - Define operations declaratively without writing request logic
-  - Multiple resources (Issues, Comments)
-  - Multiple operations (Get, Get All, Create)
-  - Two authentication methods (OAuth2 and Personal Access Token)
-  - List search functionality for dynamic dropdowns
-  - Proper error handling and typing
-  - Ideal for HTTP API-based integrations
-
-> [!TIP]
-> The declarative/low-code style (used in GitHub Issues) is the recommended approach for building nodes that interact with HTTP APIs. It significantly reduces boilerplate code and handles requests automatically.
-
-Browse these examples to understand both approaches, then modify them or create your own.
-
-## Finding Inspiration
-
-Looking for more examples? Check out these resources:
-
-- **[npm Community Nodes](https://www.npmjs.com/search?q=keywords:n8n-community-node-package)** - Browse thousands of community-built nodes on npm using the `n8n-community-node-package` tag
-- **[n8n Built-in Nodes](https://github.com/n8n-io/n8n/tree/master/packages/nodes-base/nodes)** - Study the source code of n8n's official nodes for production-ready patterns and best practices
-- **[n8n Credentials](https://github.com/n8n-io/n8n/tree/master/packages/nodes-base/credentials)** - See how authentication is implemented for various services
-
-These are excellent resources to understand how to structure your nodes, handle different API patterns, and implement advanced features.
-
-## Prerequisites
-
-Before you begin, install the following on your development machine:
-
-### Required
-
-- **[Node.js](https://nodejs.org/)** (v22 or higher) and npm
-  - Linux/Mac/WSL: Install via [nvm](https://github.com/nvm-sh/nvm)
-  - Windows: Follow [Microsoft's NodeJS guide](https://learn.microsoft.com/en-us/windows/dev-environment/javascript/nodejs-on-windows)
-- **[git](https://git-scm.com/downloads)**
-
-### Recommended
-
-- Follow n8n's [development environment setup guide](https://docs.n8n.io/integrations/creating-nodes/build/node-development-environment/)
-
-> [!NOTE]
-> The `@n8n/node-cli` is included as a dev dependency and will be installed automatically when you run `npm install`. The CLI includes n8n for local development, so you don't need to install n8n globally.
-
-## Getting Started with this Starter
-
-Follow these steps to create your own n8n community node package:
-
-### 1. Create Your Repository
-
-[Generate a new repository](https://github.com/n8n-io/n8n-nodes-starter/generate) from this template, then clone it:
+### Manual Installation
 
 ```bash
-git clone https://github.com/<your-organization>/<your-repo-name>.git
-cd <your-repo-name>
+npm install n8n-nodes-open5e
 ```
 
-### 2. Install Dependencies
+## Operations
 
-```bash
-npm install
-```
+The Open5e node provides access to 12 different D&D 5e resources through the Open5e API. Each resource supports three operations:
 
-This installs all required dependencies including the `@n8n/node-cli`.
+- **Get Many**: Retrieve multiple items with optional filters and pagination
+- **Get**: Retrieve a single item by its identifier (slug or key)
+- **Search**: Search for items by name or description
 
-### 3. Explore the Examples
+## Credentials
 
-Browse the example nodes in [nodes/](nodes/) and [credentials/](credentials/) to understand the structure:
+**No credentials required!** The Open5e API is completely free and public. No API key or authentication is needed.
 
-- Start with [nodes/Example/](nodes/Example/) for a basic node
-- Study [nodes/GithubIssues/](nodes/GithubIssues/) for a real-world implementation
+## Compatibility
 
-### 4. Build Your Node
+- Minimum n8n version: 1.0.0
+- Tested with n8n version: 1.x
 
-Edit the example nodes to fit your use case, or create new node files by copying the structure from [nodes/Example/](nodes/Example/).
+## Usage
 
-> [!TIP]
-> If you want to scaffold a completely new node package, use `npm create @n8n/node` to start fresh with the CLI's interactive generator.
+### Resources
 
-### 5. Configure Your Package
+The node provides access to the following D&D 5e resources:
 
-Update `package.json` with your details:
+1. **Monsters** - Creatures and NPCs
+2. **Spells** - Magic spells
+3. **Magic Items** - Magical equipment
+4. **Weapons** - Weapon stats
+5. **Armor** - Armor types and stats
+6. **Feats** - Character feats
+7. **Conditions** - Status conditions
+8. **Races** - Player character races
+9. **Classes** - Player character classes
+10. **Backgrounds** - Character backgrounds
+11. **Planes** - Planes of existence
+12. **Sections** - Rules and lore sections
 
-- `name` - Your package name (must start with `n8n-nodes-`)
-- `author` - Your name and email
-- `repository` - Your repository URL
-- `description` - What your node does
+### Example Workflows
 
-Make sure your node is registered in the `n8n.nodes` array.
+#### 1. Random Encounter Generator
 
-### 6. Develop and Test Locally
+Create random encounters by fetching monsters filtered by challenge rating:
 
-Start n8n with your node loaded:
+1. Add an Open5e node to your workflow
+2. Select Resource: **Monster**
+3. Select Operation: **Get Many**
+4. In **Filters**, add:
+   - Challenge Rating: `5`
+   - Document Source: `wotc-srd`
+5. Toggle **Return All** ON to get all matching monsters
+6. Connect to a Function node to randomly select 3-5 monsters
+7. Format the output as needed (Discord message, email, etc.)
 
-```bash
-npm run dev
-```
+#### 2. Spell Lookup Bot
 
-This command runs `n8n-node dev` which:
+Build a Discord bot that looks up spell information:
 
-- Builds your node with watch mode
-- Starts n8n with your node available
-- Automatically rebuilds when you make changes
-- Opens n8n in your browser (usually http://localhost:5678)
+1. Use a Discord Trigger node to listen for commands
+2. Add a Function node to extract the spell name from the command
+3. Add an Open5e node:
+   - Resource: **Spell**
+   - Operation: **Search**
+   - Search Term: `={{ $json.spellName }}`
+4. Add a Function node to format the spell details
+5. Send the formatted spell info back to Discord
 
-You can now test your node in n8n workflows!
+#### 3. Item Database Search
 
-> [!NOTE]
-> Learn more about CLI commands in the [@n8n/node-cli documentation](https://www.npmjs.com/package/@n8n/node-cli).
+Search for magic items and weapons by name:
 
-### 7. Lint Your Code
+1. Add an HTTP Request trigger or Form trigger to accept search queries
+2. Add an Open5e node:
+   - Resource: **Magic Item** (or **Weapon**)
+   - Operation: **Search**
+   - Search Term: `={{ $json.query }}`
+   - Limit: `10`
+3. Format and return the results
 
-Check for errors:
+### Filters and Options
 
-```bash
-npm run lint
-```
+#### Common Filters (All Resources)
 
-Auto-fix issues when possible:
+- **Document Source** (`document__slug`): Filter by source book
+  - Examples: `wotc-srd` (official SRD), `tob` (Tome of Beasts), `cc` (Creature Codex)
+- **Ordering**: Sort results
+  - Options: `name` (A-Z), `-name` (Z-A)
 
-```bash
-npm run lint:fix
-```
+#### Resource-Specific Filters
 
-### 8. Build for Production
+**Monsters:**
+- Challenge Rating: e.g., `5`, `1/2`, `0`
+- Type: e.g., `dragon`, `humanoid`, `undead`
+- Size: Tiny, Small, Medium, Large, Huge, Gargantuan
 
-When ready to publish:
+**Spells:**
+- Level: 0-9 (0 = cantrip)
+- School: e.g., `evocation`, `abjuration`, `necromancy`
+- Class: e.g., `wizard`, `cleric`, `druid`
 
-```bash
-npm run build
-```
+**Weapons & Armor:**
+- Category: e.g., `simple`, `martial` (weapons); `light`, `medium`, `heavy` (armor)
 
-This compiles your TypeScript code to the `dist/` folder.
+**Magic Items:**
+- Type: e.g., `weapon`, `armor`, `wondrous item`
+- Rarity: `common`, `uncommon`, `rare`, `very rare`, `legendary`
 
-### 9. Prepare for Publishing
+### Pagination
 
-Before publishing:
+- **Return All**: When enabled, automatically fetches all pages of results
+- **Limit**: When Return All is off, specify how many results to return (1-100)
 
-1. **Update documentation**: Replace this README with your node's documentation. Use [README_TEMPLATE.md](README_TEMPLATE.md) as a starting point.
-2. **Update the LICENSE**: Add your details to the [LICENSE](LICENSE.md) file.
-3. **Test thoroughly**: Ensure your node works in different scenarios.
-
-### 10. Publish to npm
-
-Publish your package to make it available to the n8n community:
-
-```bash
-npm publish
-```
-
-Learn more about [publishing to npm](https://docs.npmjs.com/packages-and-modules/contributing-packages-to-the-registry).
-
-### 11. Submit for Verification (Optional)
-
-Get your node verified for n8n Cloud:
-
-1. Ensure your node meets the [requirements](https://docs.n8n.io/integrations/creating-nodes/deploy/submit-community-nodes/):
-   - Uses MIT license ✅ (included in this starter)
-   - No external package dependencies
-   - Follows n8n's design guidelines
-   - Passes quality and security review
-
-2. Submit through the [n8n Creator Portal](https://creators.n8n.io/nodes)
-
-**Benefits of verification:**
-
-- Available directly in n8n Cloud
-- Discoverable in the n8n nodes panel
-- Verified badge for quality assurance
-- Increased visibility in the n8n community
-
-## Available Scripts
-
-This starter includes several npm scripts to streamline development:
-
-| Script                | Description                                                      |
-| --------------------- | ---------------------------------------------------------------- |
-| `npm run dev`         | Start n8n with your node and watch for changes (runs `n8n-node dev`) |
-| `npm run build`       | Compile TypeScript to JavaScript for production (runs `n8n-node build`) |
-| `npm run build:watch` | Build in watch mode (auto-rebuild on changes)                    |
-| `npm run lint`        | Check your code for errors and style issues (runs `n8n-node lint`) |
-| `npm run lint:fix`    | Automatically fix linting issues when possible (runs `n8n-node lint --fix`) |
-| `npm run release`     | Create a new release (runs `n8n-node release`)                   |
-
-> [!TIP]
-> These scripts use the [@n8n/node-cli](https://www.npmjs.com/package/@n8n/node-cli) under the hood. You can also run CLI commands directly, e.g., `npx n8n-node dev`.
-
-## Troubleshooting
-
-### My node doesn't appear in n8n
-
-1. Make sure you ran `npm install` to install dependencies
-2. Check that your node is listed in `package.json` under `n8n.nodes`
-3. Restart the dev server with `npm run dev`
-4. Check the console for any error messages
-
-### Linting errors
-
-Run `npm run lint:fix` to automatically fix most common issues. For remaining errors, check the [n8n node development guidelines](https://docs.n8n.io/integrations/creating-nodes/).
-
-### TypeScript errors
-
-Make sure you're using Node.js v22 or higher and have run `npm install` to get all type definitions.
+The node automatically handles pagination by following the API's `next` links.
 
 ## Resources
 
-- **[n8n Node Documentation](https://docs.n8n.io/integrations/creating-nodes/)** - Complete guide to building nodes
-- **[n8n Community Forum](https://community.n8n.io/)** - Get help and share your nodes
-- **[@n8n/node-cli Documentation](https://www.npmjs.com/package/@n8n/node-cli)** - CLI tool reference
-- **[n8n Creator Portal](https://creators.n8n.io/nodes)** - Submit your node for verification
-- **[Submit Community Nodes Guide](https://docs.n8n.io/integrations/creating-nodes/deploy/submit-community-nodes/)** - Verification requirements and process
+- [Open5e API Documentation](https://api.open5e.com)
+- [Open5e Website](https://open5e.com)
+- [n8n community nodes documentation](https://docs.n8n.io/integrations/community-nodes/)
 
-## Contributing
+## Limitations
 
-Have suggestions for improving this starter? [Open an issue](https://github.com/n8n-io/n8n-nodes-starter/issues) or submit a pull request!
+### Global Search Not Supported
+
+The Open5e API's global search endpoint (`/v1/search/`) returns HTML instead of JSON, so it is not supported by this node. Use the Search operation on individual resources instead.
+
+### Self-Hosted Instances Not Supported
+
+The node only connects to the public Open5e API at `api.open5e.com`. Self-hosted Open5e instances are not supported in v1.
+
+### Advanced Filtering
+
+Only the most commonly used filters are exposed in the node UI. For advanced filtering needs, use the HTTP Request node directly with the Open5e API.
+
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Build the node
+npm run build
+
+# Run in development mode
+npm run dev
+
+# Lint the code
+npm run lint
+
+# Fix linting issues
+npm run lint:fix
+```
 
 ## License
 
-[MIT](https://github.com/n8n-io/n8n-nodes-starter/blob/master/LICENSE.md)
+[MIT](https://github.com/yourusername/n8n-nodes-open5e/blob/main/LICENSE.md)
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## Support
+
+- Report issues at: https://github.com/yourusername/n8n-nodes-open5e/issues
+- Join the n8n community: https://community.n8n.io/
