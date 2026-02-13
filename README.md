@@ -37,8 +37,8 @@ The Open5e node provides access to 12 different D&D 5e resources through the Ope
 
 ## Compatibility
 
-- Minimum n8n version: 1.0.0
-- Tested with n8n version: 1.x
+- Minimum n8n version: unknown - the node was developed and tested on n8n 2.7, but should be compatible with earlier versions as well
+- Tested with n8n version: 2.7
 
 ## Usage
 
