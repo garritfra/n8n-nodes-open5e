@@ -20,7 +20,7 @@ export async function getWeapons(
 		qs.search = filter;
 	}
 
-	const response = (await this.helpers.request({
+	const response = (await this.helpers.httpRequest({
 		method: 'GET',
 		url: 'https://api.open5e.com/v2/weapons',
 		qs,

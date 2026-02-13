@@ -53,52 +53,52 @@ export class Open5e implements INodeType {
 				noDataExpression: true,
 				options: [
 					{
-						name: 'Monster',
-						value: 'monster',
-					},
-					{
-						name: 'Spell',
-						value: 'spell',
-					},
-					{
-						name: 'Magic Item',
-						value: 'magicItem',
-					},
-					{
-						name: 'Weapon',
-						value: 'weapon',
-					},
-					{
 						name: 'Armor',
 						value: 'armor',
-					},
-					{
-						name: 'Feat',
-						value: 'feat',
-					},
-					{
-						name: 'Condition',
-						value: 'condition',
-					},
-					{
-						name: 'Race',
-						value: 'race',
-					},
-					{
-						name: 'Class',
-						value: 'class',
 					},
 					{
 						name: 'Background',
 						value: 'background',
 					},
 					{
+						name: 'Class',
+						value: 'class',
+					},
+					{
+						name: 'Condition',
+						value: 'condition',
+					},
+					{
+						name: 'Feat',
+						value: 'feat',
+					},
+					{
+						name: 'Magic Item',
+						value: 'magicItem',
+					},
+					{
+						name: 'Monster',
+						value: 'monster',
+					},
+					{
 						name: 'Plane',
 						value: 'plane',
 					},
 					{
+						name: 'Race',
+						value: 'race',
+					},
+					{
 						name: 'Section',
 						value: 'section',
+					},
+					{
+						name: 'Spell',
+						value: 'spell',
+					},
+					{
+						name: 'Weapon',
+						value: 'weapon',
 					},
 				],
 				default: 'monster',
