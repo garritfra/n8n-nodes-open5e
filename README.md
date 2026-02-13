@@ -1,5 +1,8 @@
 # n8n-nodes-open5e
 
+[![NPM Version](https://img.shields.io/npm/v/n8n-nodes-open5e)](https://www.npmjs.com/package/n8n-nodes-open5e)
+
+
 This is an n8n community node that lets you access D&D 5th edition SRD content from the [Open5e API](https://api.open5e.com) in your n8n workflows.
 
 [n8n](https://n8n.io/) is a [fair-code licensed](https://docs.n8n.io/reference/license/) workflow automation platform.
