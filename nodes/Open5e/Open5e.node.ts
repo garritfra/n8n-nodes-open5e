@@ -28,7 +28,7 @@ export class Open5e implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Open5e',
 		name: 'open5e',
-		icon: { light: 'file:../../icons/d20.svg', dark: 'file:../../icons/d20.dark.svg' },
+		icon: { light: 'file:../../icons/open5e.svg', dark: 'file:../../icons/open5e.dark.svg' },
 		group: ['input'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
