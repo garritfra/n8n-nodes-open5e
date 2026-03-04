@@ -54,7 +54,7 @@ on:
     tags:
       # Matches v0.1.0, v1.2.3, v2.0.0-rc.1, etc.
       # See "TAG CONVENTION" above if you prefer tags without a "v" prefix.
-      - 'v*.*.*'
+      - '*.*.*'
 
 jobs:
   # ─── Job 1: Lint and build ────────────────────────────────────────────────
