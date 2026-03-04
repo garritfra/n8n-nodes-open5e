@@ -1,0 +1,143 @@
+# Publishes this n8n community node package to npm on every version tag push.
+#
+# Starting May 1 2026, n8n requires all community nodes to be published via
+# GitHub Actions with npm provenance statements. This workflow satisfies that
+# requirement. Provenance lets anyone cryptographically verify that a package
+# was built by this exact workflow, from this exact repository and commit.
+#
+# ─── ONE-TIME SETUP ────────────────────────────────────────────────────────────
+#
+# Option A — OIDC Trusted Publishing (recommended, no long-lived secrets):
+#   1. Log in to npmjs.com and open your package's settings.
+#   2. Under "Publish access" → "Trusted Publishers", click "Add a publisher".
+#   3. Select GitHub Actions and fill in:
+#        Repository owner: <your-github-username-or-org>
+#        Repository name:  <your-repo-name>
+#        Workflow name:    publish.yml
+#        Environment:      (leave blank unless you use GitHub Environments)
+#   4. Leave the NPM_TOKEN secret unset in this repository. GitHub's OIDC
+#      token is used instead — no secret ever touches your repo settings.
+#
+# Option B — npm Automation Token (fallback):
+#   1. On npmjs.com: Access Tokens → Generate New Token → Granular Access Token.
+#      Scope it to this package with "Read and write" publish permission.
+#   2. In GitHub: Settings → Secrets and variables → Actions → New secret.
+#      Name it NPM_TOKEN and paste the token value.
+#
+# Both options work with --provenance. Provenance is signed by GitHub's OIDC
+# infrastructure regardless of how npm authentication is handled.
+#
+# ─── TAG CONVENTION ────────────────────────────────────────────────────────────
+#
+# This workflow triggers on tags matching "v*.*.*" (e.g. v0.2.0).
+# If you prefer tags without a "v" prefix (e.g. 0.2.0), change the filter to:
+#   tags: ['[0-9]+.[0-9]+.[0-9]+*']
+#
+# ─── RELEASE PROCESS ───────────────────────────────────────────────────────────
+#
+# 1. Bump the version in package.json and commit it to main.
+#      npm version patch   # or: minor, major
+#      git push origin main
+# 2. Push the tag to trigger this workflow.
+#      git push origin v0.2.0
+# 3. Watch the Actions tab — the "Lint and build" job runs first, then
+#    "Publish to npm" only if it passes.
+#
+# To use release-it (npm run release) for step 1, run it locally before
+# pushing. Do NOT call it inside this workflow — it would try to create a
+# tag again and fail because the tag already exists.
+
+name: Publish
+
+on:
+  push:
+    tags:
+      # Matches v0.1.0, v1.2.3, v2.0.0-rc.1, etc.
+      # See "TAG CONVENTION" above if you prefer tags without a "v" prefix.
+      - 'v*.*.*'
+
+jobs:
+  # ─── Job 1: Lint and build ────────────────────────────────────────────────
+  # Validates the code before publishing. A broken tag cannot produce a bad
+  # release because the publish job only starts after this one succeeds.
+  ci:
+    name: Lint and build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+      # Upload dist/ so the publish job uses the exact same compiled output
+      # that was verified here, rather than rebuilding from scratch.
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 1
+
+  # ─── Job 2: Publish to npm ────────────────────────────────────────────────
+  # Runs only after the CI job succeeds. Publishes with a provenance
+  # attestation, satisfying n8n's requirement from May 1 2026.
+  publish:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+    needs: ci
+
+    permissions:
+      # Required to mint an OIDC token for npm provenance attestation.
+      id-token: write
+      # Scoped down from the default (write) for least-privilege publishing.
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          # registry-url is required for the NODE_AUTH_TOKEN / OIDC exchange.
+          registry-url: 'https://registry.npmjs.org/'
+          cache: 'npm'
+
+      - name: Install dependencies
+        # node_modules must be present because npm publish triggers the
+        # prepublishOnly hook, which runs `n8n-node prerelease` to validate
+        # the package structure before it reaches the registry.
+        run: npm ci
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Publish to npm
+        # --provenance  Attaches a signed OIDC attestation to the package.
+        #               Requires id-token: write (set in permissions above).
+        #               Verify after publish with: npm audit signatures
+        #
+        # NODE_AUTH_TOKEN  Works for both auth options:
+        #   Option A (OIDC): Leave NPM_TOKEN secret unset. setup-node writes
+        #                    an .npmrc using this variable; when it is empty,
+        #                    npm falls through to the OIDC exchange automatically.
+        #   Option B (token): Set NPM_TOKEN in repo secrets and it is used here.
+        run: npm publish --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
