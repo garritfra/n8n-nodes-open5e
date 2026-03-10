@@ -35,17 +35,12 @@
 #
 # ─── RELEASE PROCESS ───────────────────────────────────────────────────────────
 #
-# 1. Bump the version in package.json and commit it to main.
-#      npm version patch   # or: minor, major
-#      git push origin main
-# 2. Push the tag to trigger this workflow.
-#      git push origin v0.2.0
-# 3. Watch the Actions tab — the "Lint and build" job runs first, then
-#    "Publish to npm" only if it passes.
+# Run the following command locally to start an interactive release:
 #
-# To use release-it (npm run release) for step 1, run it locally before
-# pushing. Do NOT call it inside this workflow — it would try to create a
-# tag again and fail because the tag already exists.
+#   npm run release
+#
+# This will lint, build, prompt for a version bump, update the changelog,
+# commit, tag, and push — which triggers this workflow to publish to npm.
 
 name: Publish
 
@@ -132,21 +127,11 @@ jobs:
         # --provenance      Attaches a signed OIDC attestation to the package.
         #                   Requires id-token: write (set in permissions above).
         #                   Verify after publish with: npm audit signatures
-        #
-        # --ignore-scripts  Skips the prepublishOnly hook (`n8n-node prerelease`),
-        #                   which is a developer guard that rejects direct `npm publish`
-        #                   calls and expects to run through `npm run release` instead.
-        #                   Safe to skip here because the CI job already ran lint and
-        #                   build, covering everything that hook validates.
-        #
-        #                   TODO: Check if we can use the n8n-node release script here,
-        #                   including the --provenance requirement
-        #
         # NODE_AUTH_TOKEN   Works for both auth options:
         #   Option A (OIDC): Leave NPM_TOKEN secret unset. setup-node writes
         #                    an .npmrc using this variable; when it is empty,
         #                    npm falls through to the OIDC exchange automatically.
         #   Option B (token): Set NPM_TOKEN in repo secrets and it is used here.
-        run: npm publish --provenance --ignore-scripts
+        run: npm publish --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
