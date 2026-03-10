@@ -29,9 +29,9 @@
 #
 # ─── TAG CONVENTION ────────────────────────────────────────────────────────────
 #
-# This workflow triggers on tags matching "v*.*.*" (e.g. v0.2.0).
-# If you prefer tags without a "v" prefix (e.g. 0.2.0), change the filter to:
-#   tags: ['[0-9]+.[0-9]+.[0-9]+*']
+# This workflow triggers on tags matching "*.*.*" (e.g. 0.2.0).
+# If you prefer tags with a "v" prefix (e.g. v0.2.0), change the filter to:
+#   tags: ['v[0-9]+.[0-9]+.[0-9]+*']
 #
 # ─── RELEASE PROCESS ───────────────────────────────────────────────────────────
 #
@@ -52,47 +52,9 @@ on:
       - '*.*.*'
 
 jobs:
-  # ─── Job 1: Lint and build ────────────────────────────────────────────────
-  # Validates the code before publishing. A broken tag cannot produce a bad
-  # release because the publish job only starts after this one succeeds.
-  ci:
-    name: Lint and build
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 'lts/*'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Lint
-        run: npm run lint
-
-      - name: Build
-        run: npm run build
-
-      # Upload dist/ so the publish job uses the exact same compiled output
-      # that was verified here, rather than rebuilding from scratch.
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: dist
-          path: dist/
-          retention-days: 1
-
-  # ─── Job 2: Publish to npm ────────────────────────────────────────────────
-  # Runs only after the CI job succeeds. Publishes with a provenance
-  # attestation, satisfying n8n's requirement from May 1 2026.
   publish:
     name: Publish to npm
     runs-on: ubuntu-latest
-    needs: ci
 
     permissions:
       # Required to mint an OIDC token for npm provenance attestation.
@@ -112,26 +74,18 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        # node_modules must be present because npm publish triggers the
-        # prepublishOnly hook, which runs `n8n-node prerelease` to validate
-        # the package structure before it reaches the registry.
         run: npm ci
 
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: dist/
-
-      - name: Publish to npm
-        # --provenance      Attaches a signed OIDC attestation to the package.
-        #                   Requires id-token: write (set in permissions above).
-        #                   Verify after publish with: npm audit signatures
+      - name: Release
+        # `npm run release` detects the GitHub Actions environment and publishes
+        # to npm with a provenance attestation (requires id-token: write above).
+        # Lint and build run automatically as part of the release process.
+        #
         # NODE_AUTH_TOKEN   Works for both auth options:
         #   Option A (OIDC): Leave NPM_TOKEN secret unset. setup-node writes
         #                    an .npmrc using this variable; when it is empty,
         #                    npm falls through to the OIDC exchange automatically.
         #   Option B (token): Set NPM_TOKEN in repo secrets and it is used here.
-        run: npm publish --provenance
+        run: npm run release
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
