@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+#### 0.1.3
+
+- Update Release workflow [d893bf9](https://github.com/garritfra/n8n-nodes-open5e/commit/d893bf95b67512c5fdf405b8e4bf595bf094cf7a)
+
 #### 0.1.2
 
 - Add GitHub Actions publish workflow with npm provenance statement [fa1fa6e](https://github.com/garritfra/n8n-nodes-open5e/commit/fa1fa6e834491f7d1ada430eff7acff35224b656)
